@@ -12,13 +12,16 @@ import io.restassured.response.Response;
 import static org.hamcrest.Matchers.*;
 
 public class Demo {
-//	@Before
-//	public void setup() {
-//	    RestAssured.baseURI ="http://swapi.co/api/people/1";
-//	    RestAssured.port = 443;
-//	}	
-/*
-	@Test
+	
+	//@Before
+	public void setup() {
+	    RestAssured.baseURI ="http://swapi.co/api/people/1";
+	    RestAssured.port = 443;
+	}
+	
+	 
+
+	//@Test
 	public void testGET() {
 		String body = RestAssured
                 .given()
@@ -35,9 +38,9 @@ public class Demo {
                     
                     .and().extract().body().asString();
 
-	}*/
+	}
 	
-	@Test
+	//@Test
     public void whenRequestingAResourceThenLinksToResourcesMustBeReturned() {
 
         BaseApiResponse baseApiResponse = RestAssured
@@ -71,39 +74,92 @@ public class Demo {
                 .assertThat()
                     .statusCode(is(equalTo(405)));
     }
+	
+	//@Test
+	public void metodo_POST_Para_People() {
+		   ApiResponsePOST apiResponsePOST = RestAssured
+		            .given()
+		                .baseUri("http://swapi.co/api")
+		                .and()
+		                .queryParam("format", "json")
+		                .log().all()
+		            .when()
+		                .get("/people/")
+		            .then()
+		                .statusCode(is(equalTo(200)))
+		                .and()
+		                .body("name", response -> notNullValue())
+		                .body("height", response -> notNullValue())
+		                .body("mass", response -> notNullValue())
+		                .body("hair_color", response -> notNullValue())
+		                .body("skin_color", response -> notNullValue())
+		                .body("eye_color", response -> notNullValue())
+		                .body("birth_year", response -> notNullValue())
+		                .body("gender", response -> notNullValue())
+		                .body("homeworld", response -> notNullValue())
+		                .body("films", response -> notNullValue())
+		                .body("species", response -> notNullValue())
+		                .body("vehicles", response -> notNullValue())
+		                .body("starships", response -> notNullValue())
+		                .body("created", response -> notNullValue())
+		                .body("edited", response -> notNullValue())
+		                .body("url", response -> notNullValue())
+		                .and().extract().body().as(ApiResponsePOST.class);
 
-    private static class BaseApiResponse {
-        private String films;
-        private String vehicles;
-        private String people;
-        private String starships;
-        private String species;
-        private String planets;
+		        RestAssured
+		            .given()
+		                .queryParam("format", "json")
+		                .log().all()
+		            .when()
+		                .post(apiResponsePOST.getEye_color()) 
+		            .then()
+		                .log().all() //log : nos permite configurar el nivel de detalle (de request y response por separado
+		                .and()
+		                .assertThat()
+		                    .statusCode(is(equalTo(405)));
+	}
 
-        public String getFilms() {
-            return films;
-        }
+	@Test
+	public void metodo_POST_Para_JSONPLACEHOLDER() {
+		   ApiResponseJSONPLACEHOLDER apiResponseJSONPLACEHOLDER = RestAssured
+		            .given()
+		                .baseUri("https://jsonplaceholder.typicode.com/todos")
+		                .and()
+		                .queryParam("format", "json")
+		                .log().all()
+		            .when()
+		                .get("/")
+		            .then()
+		                .statusCode(is(equalTo(200)))
+		                .and()
+		                .body("userId", response -> notNullValue())
+		                .body("id", response -> notNullValue())
+		                .body("title", response -> notNullValue())
+		                .body("completed", response -> notNullValue())
+		             
+		               
+		                .and().extract().body().as(ApiResponseJSONPLACEHOLDER.class);
 
-        public String getVehicles() {
-            return vehicles;
-        }
+		        RestAssured
+		            .given()
+		                .queryParam("format", "json")
+		                .log().all()
+		            .when()
+		                .post(apiResponseJSONPLACEHOLDER.getTitle()) 
+		            .then()
+		                .log().all() //log : nos permite configurar el nivel de detalle (de request y response por separado
+		                .and()
+		                .assertThat()
+		                    .statusCode(is(equalTo(405)));
+	}
+	
+	
+//	@Test
+//	public void metodo_PUT_Para_People() {
+//		
+//	}
 
-        public String getPeople() {
-            return people;
-        }
 
-        public String getStarships() {
-            return starships;
-        }
-
-        public String getSpecies() {
-            return species;
-        }
-
-        public String getPlanets() {
-            return planets;
-        }
-    }
 }
 	
 	
