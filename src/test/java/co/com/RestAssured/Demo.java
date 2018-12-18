@@ -6,17 +6,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
-
+import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 
 import static org.hamcrest.Matchers.*;
 
 public class Demo {
 	
-	//@Before
+	@Before
 	public void setup() {
-	    RestAssured.baseURI ="http://swapi.co/api/people/1";
-	    RestAssured.port = 443;
+	    RestAssured.baseURI ="http://swapi.co/api";
+	   // RestAssured.port = 443;
+	    RestAssured.defaultParser = Parser.JSON;
 	}
 	
 	 
@@ -25,7 +26,7 @@ public class Demo {
 	public void testGET() {
 		String body = RestAssured
                 .given()
-                    .baseUri("http://swapi.co/api")
+                   // .baseUri("http://swapi.co/api")
                     .and()
                     .queryParam("format", "json")
                 .when()
@@ -45,7 +46,7 @@ public class Demo {
 
         BaseApiResponse baseApiResponse = RestAssured
             .given()
-                .baseUri("http://swapi.co/api")
+               // .baseUri("http://swapi.co/api")
                 .and()
                 .queryParam("format", "json")
                 .log().all()
@@ -75,18 +76,21 @@ public class Demo {
                     .statusCode(is(equalTo(405)));
     }
 	
-	//@Test
+	@Test
 	public void metodo_POST_Para_People() {
+		
 		   ApiResponsePOST apiResponsePOST = RestAssured
 		            .given()
-		                .baseUri("http://swapi.co/api")
+		               // .baseUri("http://swapi.co/api")
+		            .port(443)
 		                .and()
 		                .queryParam("format", "json")
 		                .log().all()
 		            .when()
-		                .get("/people/")
+		                .get("/people/2")
 		            .then()
-		                .statusCode(is(equalTo(200)))
+		            
+		                .statusCode(equalTo(400))
 		                .and()
 		                .body("name", response -> notNullValue())
 		                .body("height", response -> notNullValue())
@@ -118,7 +122,7 @@ public class Demo {
 		                .assertThat()
 		                    .statusCode(is(equalTo(405)));
 	}
-
+/*
 	@Test
 	public void metodo_POST_Para_JSONPLACEHOLDER() {
 		   ApiResponseJSONPLACEHOLDER apiResponseJSONPLACEHOLDER = RestAssured
@@ -152,7 +156,7 @@ public class Demo {
 		                .assertThat()
 		                    .statusCode(is(equalTo(405)));
 	}
-	
+	*/
 	
 //	@Test
 //	public void metodo_PUT_Para_People() {
